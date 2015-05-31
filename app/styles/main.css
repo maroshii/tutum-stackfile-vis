@@ -51,17 +51,16 @@ App Styles
   stroke-width: 2px;
 }
 
-.stack-vis .node text{
-  fill: #000;
-  /*text-anchor: middle;*/
+.stack-vis .node .title{
+  font-weight: 700;
 }
 
 .stack-vis .node {
-  font: 10px sans-serif;
+  font: 12px sans-serif;
 }
 
 .stack-vis .link {
   fill: none;
-  stroke: #ccc;
+  stroke: #555;
   stroke-width: 1.5px;
 }

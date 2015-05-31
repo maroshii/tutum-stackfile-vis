@@ -10,10 +10,10 @@ var App = window.App = {};
 App.createHierarchy = function(stackfile) {
   var root = stackfile.lb;
 
-  function iterator(raw){
+  function iterator(raw,name){
     var tree = {}, children;
 
-    tree.name = raw.image;
+    tree.name = name;
     tree.embedded = raw;
 
     if(!raw.links){
@@ -22,7 +22,7 @@ App.createHierarchy = function(stackfile) {
     
     children = raw.links.reduce(function(memo,name) {
       if(stackfile[name]){
-        var child = iterator(stackfile[name]);
+        var child = iterator(stackfile[name],name);
         child.parent = tree.name;
 
         memo.push(child);
@@ -37,7 +37,7 @@ App.createHierarchy = function(stackfile) {
 
     return tree;
   }
-  return iterator(root);
+  return iterator(root,'lb');
 };
 
 App.renderFactory = function() {
@@ -99,16 +99,17 @@ App.renderFactory = function() {
         .attr('transform', function(d) { return 'translate(-' + (dimensions.itemWidth / 2) + ',-' + (dimensions.itemHeight / 2) + ')'; });
       
       nodeContent.append('text')
-          .text(function(d) { console.log(d); return d.embedded.image; })
-          .attr('dy', '.35em')
-          .attr('transform', 'translate(0,5)')
-          .attr('text-anchor','middle');
+        .text(function(d) { return d.name; })
+        .classed('title',true)
+        .attr('dy', '.35em')
+        .attr('transform', 'translate(0,-5)')
+        .attr('text-anchor','middle');
 
-      // nodeContent.append('text')
-      //     .text(function(d) { return d.embedded.image; })
-      //     .attr('dy', '.35em')
-      //     .attr('transform', 'translate(0,-5)')
-      //     .attr('text-anchor','middle');
+      nodeContent.append('text')
+        .text(function(d) { return d.embedded.image; })
+        .attr('dy', '.35em')
+        .attr('transform', 'translate(0,5)')
+        .attr('text-anchor','middle');
   };
 
 };

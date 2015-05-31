@@ -9,7 +9,7 @@
 
     it('should convert only the root element', function () {
       var input = {
-        lb: { image: 'lb', target_num_container: 3 }
+        lb: { image: 'img:lb', target_num_container: 3 }
       };
 
       var expected = {
@@ -22,8 +22,8 @@
 
     it('should convert root children elements if links exist ',function() {
       var input = {
-        lb: { image: 'lb', target_num_container: 3, links: ['web'] },
-        web: { image: 'web', target_num_container: 5 }
+        lb: { image: 'img:lb', target_num_container: 3, links: ['web'] },
+        web: { image: 'img:web', target_num_container: 5 }
       };
 
       var expected = {
@@ -41,13 +41,13 @@
 
     it('should recursively convert all link',function() {
       var input = {
-        lb: { image: 'lb', target_num_container: 3, links: ['web','cron'] },
-        web: { image: 'web', target_num_container: 5, links: ['redis', 'mysql', 'mongodb'] },
-        cron: { image: 'cron', target_num_container: 2, links: ['elasticsearch']},
-        redis: { image: 'redis' },
-        mysql: { image: 'mysql' },
-        mongodb: { image: 'mongodb' },
-        elasticsearch: { image: 'elasticsearch', target_num_container: 1 },
+        lb: { image: 'img:lb', target_num_container: 3, links: ['web','cron'] },
+        web: { image: 'img:web', target_num_container: 5, links: ['redis', 'mysql', 'mongodb'] },
+        cron: { image: 'img:cron', target_num_container: 2, links: ['elasticsearch']},
+        redis: { image: 'img:redis' },
+        mysql: { image: 'img:mysql' },
+        mongodb: { image: 'img:mongodb' },
+        elasticsearch: { image: 'img:elasticsearch', target_num_container: 1 },
       };
 
       var expected = {
@@ -88,8 +88,8 @@
 
     it('should gracefully omit a link of it doesn\'t exist in the file',function() {
       var input = {
-        lb: { image: 'lb', target_num_container: 3, links: ['web'] },
-        web: { image: 'web', target_num_container: 5, links: ['redis'] }
+        lb: { image: 'img:lb', target_num_container: 3, links: ['web'] },
+        web: { image: 'img:web', target_num_container: 5, links: ['redis'] }
       };
 
       var expected = {
