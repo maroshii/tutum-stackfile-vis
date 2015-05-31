@@ -40,6 +40,28 @@ body {
 App Styles
 *******************************/
 
-main .stack-input-content{
+.stack-input-content,
+.stack-vis{
   min-height: 350px;
+}
+
+.stack-vis .node rect{
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 2px;
+}
+
+.stack-vis .node text{
+  fill: #000;
+  /*text-anchor: middle;*/
+}
+
+.stack-vis .node {
+  font: 10px sans-serif;
+}
+
+.stack-vis .link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1.5px;
 }

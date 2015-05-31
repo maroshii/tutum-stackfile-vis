@@ -21,13 +21,14 @@ lb:
   image: tutum/haproxy:latest
   links:
     - web
+    - sql
 web:
   image: tutum/hello-world:latest
   target_num_containers: 5
-  links: 
-    - redis
 redis:
   image: tutum/redis:latest
+sql:
+  image: tutum/sql:latest
           </textarea>
         </div>
         <div class='col-sm-6 stack-vis'>
