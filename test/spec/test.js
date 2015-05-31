@@ -5,33 +5,7 @@
   'use strict';
 
   describe('JSON Stackfile to D3 data tree', function () {
-    var fn = function(json) {
-      function iterator(raw){
-        var tree = {}, children;
-
-        tree.name = raw.image;
-        tree.embedded = raw;
-
-        if(!raw.links){
-          return tree;
-        }
-        
-        children = raw.links.reduce(function(memo,name) {
-          if(json[name]){
-            memo.push(iterator(json[name]));
-          }
-          
-          return memo;
-        },[]);
-
-        if(children.length){
-          tree.children = children;
-        }
-
-        return tree;
-      }
-      return iterator(json.lib);
-    };
+    var fn = window.App.createHierarchy;
 
     it('should convert only the root element', function () {
       var input = {

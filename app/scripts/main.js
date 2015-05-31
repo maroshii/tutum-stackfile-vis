@@ -2,6 +2,38 @@
 
 'use strict';
 
+var App = window.App = {};
+
+App.createHierarchy = function(stackfile) {
+  function iterator(raw){
+    var tree = {}, children;
+
+    tree.name = raw.image;
+    tree.embedded = raw;
+
+    if(!raw.links){
+      return tree;
+    }
+    
+    children = raw.links.reduce(function(memo,name) {
+      if(stackfile[name]){
+        memo.push(iterator(stackfile[name]));
+      }
+      
+      return memo;
+    },[]);
+
+    if(children.length){
+      tree.children = children;
+    }
+
+    return tree;
+  }
+  return iterator(stackfile.lib);
+};
+
+
+
 var d3Area = d3.select('#stackfile-content');
 var d3AreaWrapper = d3.select('.stack-input');
 
