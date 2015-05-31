@@ -9,12 +9,12 @@
 
     it('should convert only the root element', function () {
       var input = {
-        lib: { image: 'lib', target_num_container: 3 }
+        lb: { image: 'lb', target_num_container: 3 }
       };
 
       var expected = {
-        name: 'lib',
-        embedded: input.lib
+        name: 'lb',
+        embedded: input.lb
       };
 
       assert.deepEqual(fn(input),expected);
@@ -22,16 +22,16 @@
 
     it('should convert root children elements if links exist ',function() {
       var input = {
-        lib: { image: 'lib', target_num_container: 3, links: ['web'] },
+        lb: { image: 'lb', target_num_container: 3, links: ['web'] },
         web: { image: 'web', target_num_container: 5 }
       };
 
       var expected = {
-        name: 'lib',
-        embedded: input.lib,
+        name: 'lb',
+        embedded: input.lb,
         children: [{
           name: 'web',
-          parent: 'lib',
+          parent: 'lb',
           embedded: input.web
         }]
       };
@@ -41,7 +41,7 @@
 
     it('should recursively convert all link',function() {
       var input = {
-        lib: { image: 'lib', target_num_container: 3, links: ['web','cron'] },
+        lb: { image: 'lb', target_num_container: 3, links: ['web','cron'] },
         web: { image: 'web', target_num_container: 5, links: ['redis', 'mysql', 'mongodb'] },
         cron: { image: 'cron', target_num_container: 2, links: ['elasticsearch']},
         redis: { image: 'redis' },
@@ -51,11 +51,11 @@
       };
 
       var expected = {
-        name: 'lib',
-        embedded: input.lib,
+        name: 'lb',
+        embedded: input.lb,
         children: [{
           name: 'web',
-          parent: 'lib',
+          parent: 'lb',
           embedded: input.web,
           children: [{
             name: 'redis',
@@ -72,7 +72,7 @@
           }]
         },{
           name: 'cron',
-          parent: 'lib',
+          parent: 'lb',
           embedded: input.cron,
           children: [{
             name: 'elasticsearch',
@@ -88,16 +88,16 @@
 
     it('should gracefully omit a link of it doesn\'t exist in the file',function() {
       var input = {
-        lib: { image: 'lib', target_num_container: 3, links: ['web'] },
+        lb: { image: 'lb', target_num_container: 3, links: ['web'] },
         web: { image: 'web', target_num_container: 5, links: ['redis'] }
       };
 
       var expected = {
-        name: 'lib',
-        embedded: input.lib,
+        name: 'lb',
+        embedded: input.lb,
         children: [{
           name: 'web',
-          parent: 'lib',
+          parent: 'lb',
           embedded: input.web
         }]
       };
