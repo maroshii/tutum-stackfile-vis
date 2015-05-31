@@ -17,7 +17,10 @@ App.createHierarchy = function(stackfile) {
     
     children = raw.links.reduce(function(memo,name) {
       if(stackfile[name]){
-        memo.push(iterator(stackfile[name]));
+        var child = iterator(stackfile[name]);
+        child.parent = tree.name;
+
+        memo.push(child);
       }
       
       return memo;

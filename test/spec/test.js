@@ -31,6 +31,7 @@
         embedded: input.lib,
         children: [{
           name: 'web',
+          parent: 'lib',
           embedded: input.web
         }]
       };
@@ -54,22 +55,28 @@
         embedded: input.lib,
         children: [{
           name: 'web',
+          parent: 'lib',
           embedded: input.web,
           children: [{
             name: 'redis',
+            parent: 'web',
             embedded: input.redis
           },{
             name: 'mysql',
+            parent: 'web',
             embedded: input.mysql
           },{
             name: 'mongodb',
+            parent: 'web',
             embedded: input.mongodb
           }]
         },{
           name: 'cron',
+          parent: 'lib',
           embedded: input.cron,
           children: [{
             name: 'elasticsearch',
+            parent: 'cron',
             embedded: input.elasticsearch
           }]
         }]
@@ -90,6 +97,7 @@
         embedded: input.lib,
         children: [{
           name: 'web',
+          parent: 'lib',
           embedded: input.web
         }]
       };
