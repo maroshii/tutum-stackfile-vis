@@ -45,6 +45,10 @@ App Styles
   min-height: 350px;
 }
 
+.stack-vis .node {
+  font-family: sans-serif;
+}
+
 .stack-vis .node rect{
   fill: #fff;
   stroke: steelblue;
@@ -52,12 +56,23 @@ App Styles
 }
 
 .stack-vis .node .title{
+  font-size: 14px;
   font-weight: 700;
 }
-
-.stack-vis .node {
-  font: 12px sans-serif;
+.stack-vis .node .image{
+  fill: #666;
+  font-weight: 100;
+  font-size: 12px;
 }
+
+.stack-vis .node .count circle{
+  fill : #0096e5;
+}
+
+.stack-vis .node .count text{
+  fill : #fff;
+}
+
 
 .stack-vis .link {
   fill: none;

@@ -1,4 +1,4 @@
-/* jshint unused: false */
+/* jshint unused: false, camelcase: false */
 /* global jsyaml, d3 */
 
 'use strict';
@@ -42,10 +42,11 @@ App.createHierarchy = function(stackfile) {
 
 App.renderFactory = function() {
   var dimensions = {
-    margin: 30,
+    margin: 40,
     itemWidth: 150,
-    itemHeight: 40,
-    borderRadius: 5
+    itemHeight: 50,
+    borderRadius: 5,
+    counterRadius: 12
   };
 
   var d3VisWrapper = d3.select('.stack-vis');
@@ -102,14 +103,30 @@ App.renderFactory = function() {
         .text(function(d) { return d.name; })
         .classed('title',true)
         .attr('dy', '.35em')
-        .attr('transform', 'translate(0,-5)')
+        .attr('transform', 'translate(0,-8)')
         .attr('text-anchor','middle');
 
       nodeContent.append('text')
         .text(function(d) { return d.embedded.image; })
+        .classed('image',true)
         .attr('dy', '.35em')
-        .attr('transform', 'translate(0,5)')
+        .attr('transform', 'translate(0,8)')
         .attr('text-anchor','middle');
+
+      var nodeCount = nodeContent
+        .append('g')
+        .classed('count',true)
+        .attr('transform', 'translate(' + (dimensions.itemWidth / 2) + ',-' + (dimensions.itemHeight / 2) + ')');
+
+      nodeCount
+        .append('circle')
+        .attr('r',dimensions.counterRadius);
+
+      nodeCount.append('text')
+        .attr('dy', '.35em')
+        .attr('text-anchor','middle')
+        .text(function(d) { return d.embedded.target_num_containers || 1; });
+
   };
 
 };
