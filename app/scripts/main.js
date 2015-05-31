@@ -66,6 +66,16 @@ App.renderFactory = function() {
     .attr('width', width + dimensions.margin*2)
     .attr('height', height + dimensions.margin*2);
 
+  svgContainer.append('defs').append('marker')
+    .attr('id', 'arrowhead')
+    .attr('refX', 5)
+    .attr('refY', 2)
+    .attr('markerWidth', 4)
+    .attr('markerHeight', 4)
+    .attr('orient', 'auto')
+    .append('path')
+        .attr('d', 'M 0,0 V 4 L6,2 Z');
+
   var svg = svgContainer.append('g');
 
   return function update(stackfile) {
@@ -85,6 +95,7 @@ App.renderFactory = function() {
       .enter()
       .append('path')
       .attr('class', 'link')
+      .attr('marker-end', 'url(#arrowhead)')
       .attr('d', diagonal);
 
     var nodeContent = node

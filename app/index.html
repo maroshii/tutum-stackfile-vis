@@ -16,25 +16,9 @@
       </div>
       <main class='row'>
         <div class='col-sm-6 stack-input'>
-          <textarea class='form-control stack-input-content' id='stackfile-content'>
-lb:
-  image: tutum/haproxy:latest
-  links:
-    - web
-    - sql
-web:
-  image: tutum/hello-world:latest
-  target_num_containers: 5
-redis:
-  image: tutum/redis:latest
-sql:
-  image: tutum/sql:latest
-          </textarea>
+          <textarea class='form-control stack-input-content' id='stackfile-content' placeholder='lb: ...'></textarea>
         </div>
-        <div class='col-sm-6 stack-vis'>
-          <div id='vis'>Title</div>
-        </div>
-        
+        <div class='col-sm-6 stack-vis'></div>
       </main>
     </div>
     <!-- <script src="bower_components/jquery/dist/jquery.js"></script> -->

@@ -23,7 +23,7 @@ body {
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
   .container {
-    max-width: 960px;
+    max-width: 1200px;
   }
 
   .header{
@@ -52,7 +52,7 @@ App Styles
 .stack-vis .node rect{
   fill: #fff;
   stroke: steelblue;
-  stroke-width: 2px;
+  stroke-width: 1.5px;
 }
 
 .stack-vis .node .title{
@@ -72,7 +72,6 @@ App Styles
 .stack-vis .node .count text{
   fill : #fff;
 }
-
 
 .stack-vis .link {
   fill: none;
