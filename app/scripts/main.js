@@ -188,8 +188,13 @@ App.createHierarchy = function(stackfile) {
     }
     
     children = raw.links.reduce(function(memo,name) {
+      // Remove the "alias"
       if(name.indexOf(':') > -1){
-        name = name.split(':')[0]; // 0?
+        name = name.split(':')[0]; 
+      }
+      // Omit services from different stacks for now
+      else if(name.indexOf('.') > -1){
+        return memo;
       }
 
       if(stackfile[name]){
