@@ -188,6 +188,10 @@ App.createHierarchy = function(stackfile) {
     }
     
     children = raw.links.reduce(function(memo,name) {
+      if(name.indexOf(':') > -1){
+        name = name.split(':')[0]; // 0?
+      }
+
       if(stackfile[name]){
         var child = iterator(stackfile[name],name);
         child.parent = tree.name;
