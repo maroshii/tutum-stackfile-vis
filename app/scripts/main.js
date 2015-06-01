@@ -136,7 +136,7 @@ function renderFactory() {
 
 // Initialize App
 App.init = function() {
-  var d3Area, areaNode, d3AreaWrapper;
+  var d3Area, d3AreaWrapper;
 
   var fileData = function(txt) {
     try { return jsyaml.load(txt); }
@@ -151,9 +151,8 @@ App.init = function() {
 
   d3Area = d3.select('#stackfile-content');
   d3AreaWrapper = d3.select('.stack-input');
-  areaNode = d3Area.node();
 
-  areaNode.addEventListener('input',function() {
+  d3Area.node().addEventListener('input',function() {
     var text, stackfileData, treeData;
 
     text = d3Area.node().value;
@@ -176,8 +175,8 @@ App.init = function() {
     showError();
   });
 
-  areaNode.value = initialFile;
-  areaNode.dispatchEvent(new Event('input'));
+  d3Area.node().value = initialFile;
+  d3Area.node().dispatchEvent(new Event('input'));
 
 };
 
@@ -247,11 +246,11 @@ App.createHierarchy = function(stackfile) {
 // Populates the textarea from imported files
 App.populate = function(files) {
   var reader = new FileReader();
+  var el = document.querySelector('#stackfile-content');
 
   reader.onload = function(e) {
-    var ev = new Event('input');
-    var el = document.querySelector('#stackfile-content');
-    el.innerHTML = e.target.result;
+    var ev = new Event('input');  
+    el.value = e.target.result;
     el.dispatchEvent(ev);
   };
 
