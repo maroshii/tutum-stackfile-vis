@@ -8,9 +8,21 @@ var App = window.App = {};
 
 // Expose it for testing purposes
 App.createHierarchy = function(stackfile) {
-  var root = stackfile.lb;
+  var keys, rootKey, root;
+
+  if(!stackfile || typeof stackfile === 'string' || !((keys = Object.keys(stackfile)).length)){
+    return null;
+  }
+
+  rootKey = stackfile.lb ? 'lb' : keys[0];
+  root = stackfile[rootKey];
+
+  if(!root){
+    return null;
+  }
 
   function iterator(raw,name){
+
     var tree = {}, children;
 
     tree.name = name;
@@ -37,7 +49,7 @@ App.createHierarchy = function(stackfile) {
 
     return tree;
   }
-  return iterator(root,'lb');
+  return iterator(root,rootKey);
 };
 
 App.renderFactory = function() {
@@ -78,12 +90,15 @@ App.renderFactory = function() {
 
   var svg = svgContainer.append('g');
 
-  return function update(stackfile) {
-    var data = App.createHierarchy(stackfile);
-    var nodes = tree.nodes(data);
-  
+  return function update(data) {
     svg.remove();
 
+    if(!data){
+      return;
+    }
+
+    var nodes = tree.nodes(data);
+  
     svg = svgContainer
       .append('g')
       .attr('transform', 'translate(' + dimensions.margin + ',' + dimensions.margin + ')');
@@ -111,7 +126,7 @@ App.renderFactory = function() {
         .attr('transform', function(d) { return 'translate(-' + (dimensions.itemWidth / 2) + ',-' + (dimensions.itemHeight / 2) + ')'; });
       
       nodeContent.append('text')
-        .text(function(d) { return d.name; })
+        .text(function(d) { console.log(d); return d.name; })
         .classed('title',true)
         .attr('dy', '.35em')
         .attr('transform', 'translate(0,-8)')
@@ -144,30 +159,44 @@ App.renderFactory = function() {
 
 App.init = function() {
   var d3Area, d3AreaWrapper;
-  
   var render = App.renderFactory();
 
-  var fileData = function() {
-    try { return jsyaml.load(d3Area.node().value); }
+  var fileData = function(txt) {
+    try { return jsyaml.load(txt); }
     catch(e){ return null; }
+  };
+
+  var clearError = function() {
+    d3AreaWrapper.classed('has-error', false);
+  }, showError = function(){
+    d3AreaWrapper.classed('has-error', true);
   };
 
   d3Area = d3.select('#stackfile-content');
   d3AreaWrapper = d3.select('.stack-input');
 
   d3Area.node().addEventListener('input',function() {
-    var stackfileData = fileData();
+    var text, stackfileData, treeData;
 
-    if(!stackfileData){
-      d3AreaWrapper.classed('has-error', true);
-      return;
+    text = d3Area.node().value;
+
+    if(!text.length){
+      clearError();
+      return render();
     }
 
-    d3AreaWrapper.classed('has-error',false);
-    render(stackfileData);
-  });
+    stackfileData = fileData(text);
 
-  render(fileData());
+    if(stackfileData){
+      clearError();
+      treeData = App.createHierarchy(stackfileData);
+      if(treeData){
+        render(treeData);
+      }
+      return;
+    }
+    showError();
+  });
 };
 
 App.init();

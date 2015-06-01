@@ -52,7 +52,7 @@ App Styles
 .stack-vis .node rect{
   fill: #fff;
   stroke: steelblue;
-  stroke-width: 1.5px;
+  stroke-width: 2px;
 }
 
 .stack-vis .node .title{

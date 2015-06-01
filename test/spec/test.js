@@ -103,8 +103,81 @@
       };
 
       assert.deepEqual(fn(input),expected);
+    });
+
+    it.only('should return null on empty or invalid input',function() {
+      var input1 = {};
+      var input2 = null;
+      var input3;
+      var input4 = 'l';
+
+      assert.deepEqual(fn(input1),null);
+      assert.deepEqual(fn(input2),null);
+      assert.deepEqual(fn(input3),null);
+      assert.deepEqual(fn(input4),null);
+    });
+
+    it('should use the first key if "lb" is not present',function() {
+      var input = {
+        web: { image: 'img:web', target_num_container: 5, links: ['redis', 'mysql', 'mongodb'] },
+        redis: { image: 'img:redis' },
+        mysql: { image: 'img:mysql' },
+        mongodb: { image: 'img:mongodb' }
+      };
+
+      var expected = {
+        name: 'web',
+        embedded: input.web,
+        children: [{
+          name: 'redis',
+          embedded: input.redis,
+          parent: 'web'
+        },{
+          name: 'mysql',
+          embedded: input.mysql,
+          parent: 'web'
+        },{
+          name: 'mongodb',
+          embedded: input.mongodb,
+          parent: 'web'
+        }]
+      };
+
+      assert.deepEqual(fn(input),expected);
 
     });
+
+    it('should handle early input',function() {
+      // var input = {
+      //   w: { image: 'img:web', target_num_container: 5, links: ['redis', 'mysql', 'mongodb'] },
+      //   redis: { image: 'img:redis' },
+      //   mysql: { image: 'img:mysql' },
+      //   mongodb: { image: 'img:mongodb' }
+      // };
+
+      // var expected = {
+      //   name: 'web',
+      //   embedded: input.web,
+      //   children: [{
+      //     name: 'redis',
+      //     embedded: input.redis,
+      //     parent: 'web'
+      //   },{
+      //     name: 'mysql',
+      //     embedded: input.mysql,
+      //     parent: 'web'
+      //   },{
+      //     name: 'mongodb',
+      //     embedded: input.mongodb,
+      //     parent: 'web'
+      //   }]
+      // };
+
+      // assert.deepEqual(fn(input),expected);
+
+    });
+
+
 
 
   });
