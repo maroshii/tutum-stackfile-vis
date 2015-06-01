@@ -3,8 +3,11 @@
 
 'use strict';
 
+(function() {
+
 var App = window.App = {};
 
+// Closure containing the d3 bootrapping and rendering
 function renderFactory() {
   var dimensions = {
     margin: 40,
@@ -105,10 +108,10 @@ function renderFactory() {
       .attr('dy', '.35em')
       .attr('text-anchor','middle')
       .text(function(d) { return d.embedded.target_num_containers || 1; });
-
   };
 }
 
+// Initialize App
 App.init = function() {
   var d3Area, d3AreaWrapper;
 
@@ -150,9 +153,15 @@ App.init = function() {
   });
 };
 
+// Tree rendering function
+// Should be called each time there's new data
+// or called with no data to clear the tree
 App.render = renderFactory();
 
-// Expose it for testing purposes
+// Given a stackfile in JSON formats creates
+// a d3 tree hierarchy data structure
+// See test/spec/test.js
+// Exposed for testing purposes
 App.createHierarchy = function(stackfile) {
   var keys, rootKey, root;
 
@@ -198,6 +207,7 @@ App.createHierarchy = function(stackfile) {
   return iterator(root,rootKey);
 };
 
+// Populates the textarea from imported files
 App.populate = function(files) {
   var reader = new FileReader();
 
@@ -212,3 +222,5 @@ App.populate = function(files) {
 };
 
 App.init();
+
+}());
