@@ -7,6 +7,29 @@
 
 var App = window.App = {};
 
+// Boostrapped file
+var initialFile = 'lb:'+
+'\n  image: tutum/haproxy'+
+'\n  links:'+
+'\n    - "web:web"'+
+'\n  ports:'+
+'\n    - "80:80"'+
+'\n  roles:'+
+'\n    - global'+
+'\nweb:'+
+'\n  image: tutum/quickstart-python'+
+'\n  links:'+
+'\n    - "redis:redis"'+
+'\n    - "mysql:mysql"'+
+'\n  target_num_containers: 4'+
+'\nredis:'+
+'\n  image: tutum/redis'+
+'\n  environment:'+
+'\n    - REDIS_PASS=password'+
+'\nmysql:'+
+'\n  image: tutum/mysql';
+
+
 // Closure containing the d3 bootrapping and rendering
 function renderFactory() {
   var dimensions = {
@@ -113,11 +136,11 @@ function renderFactory() {
 
 // Initialize App
 App.init = function() {
-  var d3Area, d3AreaWrapper;
+  var d3Area, areaNode, d3AreaWrapper;
 
   var fileData = function(txt) {
     try { return jsyaml.load(txt); }
-    catch(e){ return null; }
+    catch(e){console.log(e); return null; }
   };
 
   var clearError = function() {
@@ -128,8 +151,9 @@ App.init = function() {
 
   d3Area = d3.select('#stackfile-content');
   d3AreaWrapper = d3.select('.stack-input');
+  areaNode = d3Area.node();
 
-  d3Area.node().addEventListener('input',function() {
+  areaNode.addEventListener('input',function() {
     var text, stackfileData, treeData;
 
     text = d3Area.node().value;
@@ -151,6 +175,10 @@ App.init = function() {
     }
     showError();
   });
+
+  areaNode.value = initialFile;
+  areaNode.dispatchEvent(new Event('input'));
+
 };
 
 // Tree rendering function
