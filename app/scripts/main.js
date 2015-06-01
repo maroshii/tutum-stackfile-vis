@@ -3,56 +3,9 @@
 
 'use strict';
 
-
 var App = window.App = {};
 
-// Expose it for testing purposes
-App.createHierarchy = function(stackfile) {
-  var keys, rootKey, root;
-
-  if(!stackfile || typeof stackfile === 'string' || !((keys = Object.keys(stackfile)).length)){
-    return null;
-  }
-
-  rootKey = stackfile.lb ? 'lb' : keys[0];
-  root = stackfile[rootKey];
-
-  if(!root){
-    return null;
-  }
-
-  function iterator(raw,name){
-
-    var tree = {}, children;
-
-    tree.name = name;
-    tree.embedded = raw;
-
-    if(!raw.links){
-      return tree;
-    }
-    
-    children = raw.links.reduce(function(memo,name) {
-      if(stackfile[name]){
-        var child = iterator(stackfile[name],name);
-        child.parent = tree.name;
-
-        memo.push(child);
-      }
-      
-      return memo;
-    },[]);
-
-    if(children.length){
-      tree.children = children;
-    }
-
-    return tree;
-  }
-  return iterator(root,rootKey);
-};
-
-App.renderFactory = function() {
+function renderFactory() {
   var dimensions = {
     margin: 40,
     itemWidth: 150,
@@ -118,48 +71,46 @@ App.renderFactory = function() {
       .attr('class', 'node')
       .attr('transform', function(d) { return 'translate(' + d.x + ',' + d.y + ')'; });
 
-      nodeContent.append('rect')
-        .attr('rx',dimensions.borderRadius)
-        .attr('ry',dimensions.borderRadius)
-        .attr('width', dimensions.itemWidth)
-        .attr('height', dimensions.itemHeight)
-        .attr('transform', function(d) { return 'translate(-' + (dimensions.itemWidth / 2) + ',-' + (dimensions.itemHeight / 2) + ')'; });
-      
-      nodeContent.append('text')
-        .text(function(d) { console.log(d); return d.name; })
-        .classed('title',true)
-        .attr('dy', '.35em')
-        .attr('transform', 'translate(0,-8)')
-        .attr('text-anchor','middle');
+    nodeContent.append('rect')
+      .attr('rx',dimensions.borderRadius)
+      .attr('ry',dimensions.borderRadius)
+      .attr('width', dimensions.itemWidth)
+      .attr('height', dimensions.itemHeight)
+      .attr('transform', function(d) { return 'translate(-' + (dimensions.itemWidth / 2) + ',-' + (dimensions.itemHeight / 2) + ')'; });
+    
+    nodeContent.append('text')
+      .text(function(d) { return d.name; })
+      .classed('title',true)
+      .attr('dy', '.35em')
+      .attr('transform', 'translate(0,-8)')
+      .attr('text-anchor','middle');
 
-      nodeContent.append('text')
-        .text(function(d) { return d.embedded.image; })
-        .classed('image',true)
-        .attr('dy', '.35em')
-        .attr('transform', 'translate(0,8)')
-        .attr('text-anchor','middle');
+    nodeContent.append('text')
+      .text(function(d) { return d.embedded.image; })
+      .classed('image',true)
+      .attr('dy', '.35em')
+      .attr('transform', 'translate(0,8)')
+      .attr('text-anchor','middle');
 
-      var nodeCount = nodeContent
-        .append('g')
-        .classed('count',true)
-        .attr('transform', 'translate(' + (dimensions.itemWidth / 2) + ',-' + (dimensions.itemHeight / 2) + ')');
+    var nodeCount = nodeContent
+      .append('g')
+      .classed('count',true)
+      .attr('transform', 'translate(' + (dimensions.itemWidth / 2) + ',-' + (dimensions.itemHeight / 2) + ')');
 
-      nodeCount
-        .append('circle')
-        .attr('r',dimensions.counterRadius);
+    nodeCount
+      .append('circle')
+      .attr('r',dimensions.counterRadius);
 
-      nodeCount.append('text')
-        .attr('dy', '.35em')
-        .attr('text-anchor','middle')
-        .text(function(d) { return d.embedded.target_num_containers || 1; });
+    nodeCount.append('text')
+      .attr('dy', '.35em')
+      .attr('text-anchor','middle')
+      .text(function(d) { return d.embedded.target_num_containers || 1; });
 
   };
-
-};
+}
 
 App.init = function() {
   var d3Area, d3AreaWrapper;
-  var render = App.renderFactory();
 
   var fileData = function(txt) {
     try { return jsyaml.load(txt); }
@@ -182,7 +133,7 @@ App.init = function() {
 
     if(!text.length){
       clearError();
-      return render();
+      return App.render();
     }
 
     stackfileData = fileData(text);
@@ -191,12 +142,73 @@ App.init = function() {
       clearError();
       treeData = App.createHierarchy(stackfileData);
       if(treeData){
-        render(treeData);
+        App.render(treeData);
       }
       return;
     }
     showError();
   });
+};
+
+App.render = renderFactory();
+
+// Expose it for testing purposes
+App.createHierarchy = function(stackfile) {
+  var keys, rootKey, root;
+
+  if(!stackfile || typeof stackfile === 'string' || !((keys = Object.keys(stackfile)).length)){
+    return null;
+  }
+
+  rootKey = stackfile.lb ? 'lb' : keys[0];
+  root = stackfile[rootKey];
+
+  if(!root){
+    return null;
+  }
+
+  function iterator(raw,name){
+
+    var tree = {}, children;
+
+    tree.name = name;
+    tree.embedded = raw;
+
+    if(!raw.links){
+      return tree;
+    }
+    
+    children = raw.links.reduce(function(memo,name) {
+      if(stackfile[name]){
+        var child = iterator(stackfile[name],name);
+        child.parent = tree.name;
+
+        memo.push(child);
+      }
+      
+      return memo;
+    },[]);
+
+    if(children.length){
+      tree.children = children;
+    }
+
+    return tree;
+  }
+  return iterator(root,rootKey);
+};
+
+App.populate = function(files) {
+  var reader = new FileReader();
+
+  reader.onload = function(e) {
+    var ev = new Event('input');
+    var el = document.querySelector('#stackfile-content');
+    el.innerHTML = e.target.result;
+    el.dispatchEvent(ev);
+  };
+
+  reader.readAsText(files[0]);
 };
 
 App.init();

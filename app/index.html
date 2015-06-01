@@ -17,6 +17,7 @@
       <main class='row'>
         <div class='col-sm-6 stack-input'>
           <textarea class='form-control stack-input-content' id='stackfile-content' placeholder='lb: ...'></textarea>
+          <input type='file' onchange='App.populate(this.files)'>
         </div>
         <div class='col-sm-6 stack-vis'></div>
       </main>
